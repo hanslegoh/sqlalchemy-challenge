@@ -15,7 +15,8 @@
 
 - Lines 2 to 10 {**dependent modules**} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
 - Line 15 {**echo** kwarg} - from `Chinook_db_analysis_solution.ipynb`
+- Lines 15 to 24 {**reflection** setup} - from `reflection_solution.ipynb`
 - Line 33 {**.json.sort_keys** function} - from [Stack Overflow](https://stackoverflow.com/questions/54446080/how-to-keep-order-of-sorted-dictionary-passed-to-jsonify-function)
-- Lines 38 to 168 {**general route setup**} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
-- Lines 84, 132, and 158 {**np.ravel()** function} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
+- Lines 38 to 176 {**general route setup**} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
 - Lines 66 to 70 and 108 to 112 {**list of dictionaries** setup} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
+- Lines 84, 133, and 163 {**np.ravel()** function} - from `app_solution.py` in `10-Ins_Flask_with_ORM` folder
