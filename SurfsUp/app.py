@@ -122,20 +122,24 @@ def start_date(start):
 
     session = Session(engine)
 
-    normalized_date = start.replace('-', '').replace(' ', '')
-    formatted_date = dt.datetime.strptime(normalized_date, '%Y%m%d')
-    start_date_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs))\
-                            .filter(measurement.date >= formatted_date).all()
+    try:
+        normalized_date = start.replace('-', '').replace(' ', '')
+        formatted_date = dt.datetime.strptime(normalized_date, '%Y%m%d')
+        start_date_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs))\
+                                .filter(measurement.date >= formatted_date).all()
+        
+        session.close()
+
+        min_avg_max = list(np.ravel(start_date_query))
+        tobs_start_date_dict = {}
+        tobs_start_date_dict['Minimum Temperature'] = min_avg_max[0]
+        tobs_start_date_dict['Average Temperature'] = min_avg_max[1]
+        tobs_start_date_dict['Maximum Temperature'] = min_avg_max[2]
+
+        return jsonify(tobs_start_date_dict)
     
-    session.close()
-
-    min_avg_max = list(np.ravel(start_date_query))
-    tobs_start_date_dict = {}
-    tobs_start_date_dict['Minimum Temperature'] = min_avg_max[0]
-    tobs_start_date_dict['Average Temperature'] = min_avg_max[1]
-    tobs_start_date_dict['Maximum Temperature'] = min_avg_max[2]
-
-    return jsonify(tobs_start_date_dict)
+    except ValueError:
+        return jsonify(f"Error 404: {start} is not a valid date or date format (YYYYMMDD)")
 
 
 @app.route("/api/v1.0/<start>/<end>")
@@ -146,22 +150,26 @@ def start_end_dates(start, end):
 
     session = Session(engine)
 
-    normalized_start_date = start.replace('-', '').replace(' ', '')
-    normalized_end_date = end.replace('-', '').replace(' ', '')
-    formatted_start_date = dt.datetime.strptime(normalized_start_date, '%Y%m%d')
-    formatted_end_date = dt.datetime.strptime(normalized_end_date, '%Y%m%d')
-    start_end_date_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs))\
-                            .filter((measurement.date >= formatted_start_date) & (measurement.date <= formatted_end_date)).all()
+    try:
+        normalized_start_date = start.replace('-', '').replace(' ', '')
+        normalized_end_date = end.replace('-', '').replace(' ', '')
+        formatted_start_date = dt.datetime.strptime(normalized_start_date, '%Y%m%d')
+        formatted_end_date = dt.datetime.strptime(normalized_end_date, '%Y%m%d')
+        start_end_date_query = session.query(func.min(measurement.tobs), func.avg(measurement.tobs), func.max(measurement.tobs))\
+                                .filter((measurement.date >= formatted_start_date) & (measurement.date <= formatted_end_date)).all()
 
-    session.close()
+        session.close()
 
-    min_avg_max = list(np.ravel(start_end_date_query))
-    tobs_start_end_date_dict = {}
-    tobs_start_end_date_dict['Minimum Temperature'] = min_avg_max[0]
-    tobs_start_end_date_dict['Average Temperature'] = min_avg_max[1]
-    tobs_start_end_date_dict['Maximum Temperature'] = min_avg_max[2]
+        min_avg_max = list(np.ravel(start_end_date_query))
+        tobs_start_end_date_dict = {}
+        tobs_start_end_date_dict['Minimum Temperature'] = min_avg_max[0]
+        tobs_start_end_date_dict['Average Temperature'] = min_avg_max[1]
+        tobs_start_end_date_dict['Maximum Temperature'] = min_avg_max[2]
 
-    return jsonify(tobs_start_end_date_dict)
+        return jsonify(tobs_start_end_date_dict)
+    
+    except ValueError:
+        return jsonify(f"Error 404: {start} or {end} is not a valid date or date format (YYYYMMDD)")
 
 
 if __name__ == '__main__':
